@@ -27,8 +27,6 @@ router.get('/employee/:id', EmployeeController.editEmployee);
 
 router.patch('/employee/:id/edit', EmployeeController.updateEmployee);
 
-
-
 // Delete Employee
 router.delete('/employee/:id/delete', EmployeeController.deleteEmployee);
 

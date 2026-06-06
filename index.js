@@ -12,8 +12,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 // Models
 const Employee = require('./models/employee');
-const User = require('./models/user');  
- 
+const User = require('./models/user');
+
 // Routes
 const userRoutes = require('./routes/userRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
@@ -79,7 +79,7 @@ app.use("/", userRoutes);
 app.use("/", employeeRoutes);
 
 // Home route
-app.get('/', (req, res) => {
-  res.send('Employee Management API is running');
+app.get('/home', (req, res) => {
+  res.render('home');
 });
 

@@ -1,12 +1,22 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 
+// Render Signup Form
+module.exports.renderSignupForm = (req, res) => {
+  res.render("../views/Auth/signup.ejs");
+};
 
 //User Register Route
 module.exports.signup = async (req, res) => {
   try {
     //collect user data from request body
-    const { username, email, password, role } = req.body;
+    const { username, email, password } = req.body;
+
+    // 1. Count existing users
+    const userCount = await User.countDocuments();
+
+    // 2. First user becomes admin
+    const role = userCount === 0 ? "admin" : "user";
 
     //check if user Email already exist in database
     const existingUser = await User.findOne({ email });
@@ -22,12 +32,11 @@ module.exports.signup = async (req, res) => {
       username: username,
       email: email,
       password: hashedPassword,
-      role: role || "user"
+      role: role
     });
 
     await newUser.save();
-
-    res.send("User registered successfully");
+    res.redirect("/Allemployee");
 
   } catch (err) {
     console.log(err);
@@ -35,6 +44,10 @@ module.exports.signup = async (req, res) => {
   }
 };
 
+//Render Login Form
+module.exports.renderLoginForm = (req, res) => {
+  res.render("../views/Auth/login.ejs");
+};
 
 //User Login Route
 module.exports.login = async (req, res) => {
@@ -58,8 +71,6 @@ module.exports.login = async (req, res) => {
     req.session.userId = user._id;
     req.session.userName = user.username;
     req.session.userRole = user.role;
-
-    console.log(`User ${req.session.userName} logged in successfully`);
 
     res.json({ message: 'Login successful' });
   } catch (error) {
